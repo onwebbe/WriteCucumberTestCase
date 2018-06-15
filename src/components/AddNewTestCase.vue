@@ -23,7 +23,7 @@
       <div class="column is-half">
         <div class="setenceList" style="width: 80%;">
           <div class="listItem" v-for="scenarioObj in testScenarioList" v-bind:key="scenarioObj.id">
-            <a class="button is-success is-inverted" @click="editScenario(scenarioObj.id)">
+            <a class="button is-link is-inverted" @click="editScenario(scenarioObj.id)">
               <span class="icon is-small">
                 <span class="fas fa-edit"></span>
               </span>
@@ -93,6 +93,7 @@ export default {
     this.testScenarioList = this.$root.convertTestScenarioToArray();
     var testCaseObj = this.$root.getTestCaseByID(this.testcaseid);
     if (this.testcaseid == null || testCaseObj == null) {
+      this.isByPassValidate = true;
       this.$router.replace('/');
     } else {
       this.testCaseObj = testCaseObj;

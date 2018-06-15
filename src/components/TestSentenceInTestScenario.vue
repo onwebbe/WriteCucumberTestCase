@@ -145,7 +145,8 @@ export default {
         return false;
       }
       $(evt.target).addClass('TestSetenceBeforeTemp');
-      $(this.currentDragElement).addClass('TestSetenceCurrentTemp');
+      // $(this.currentDragElement).addClass('TestSetenceCurrentTemp');
+      $(this.currentDragElement).addClass('dragItemDisapearAnimation');
       var theText = this.getText(this._getItemData(itemid));
       $(evt.target).html('<span>' + theText + '</span>');
       return true;
@@ -153,7 +154,8 @@ export default {
     onDragToSetenceBeforeLeave: function (evt) {
       evt.preventDefault();
       $(evt.target).removeClass('TestSetenceBeforeTemp');
-      $(this.currentDragElement).removeClass('TestSetenceCurrentTemp');
+      // $(this.currentDragElement).removeClass('TestSetenceCurrentTemp');
+      $(this.currentDragElement).removeClass('dragItemDisapearAnimation');
       $(evt.target).html('');
       return true;
     },
@@ -161,7 +163,8 @@ export default {
       evt.preventDefault();
       $(evt.target).html('');
       $(evt.target).removeClass('TestSetenceBeforeTemp');
-      $(this.currentDragElement).removeClass('TestSetenceCurrentTemp');
+      // $(this.currentDragElement).removeClass('TestSetenceCurrentTemp');
+      $(this.currentDragElement).removeClass('dragItemDisapearAnimation');
       var insertItemId = $(evt.target).attr('sentenceID');
       var dropEle = this.currentDragElement;
       if (dropEle == null) {

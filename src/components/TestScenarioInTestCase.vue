@@ -1,6 +1,6 @@
 <template>
   <div class="TestSetenceInScenarioMain">
-    <div v-for="scenarioItem in currentScenarioList" v-bind:key="scenarioItem.caseScenarioId">
+    <div v-for="scenarioItem in currentScenarioList" v-bind:key="scenarioItem.caseScenarioId" class="TestScenarioItem">
       <div class="TestScenarioBefore" :caseScenarioID="scenarioItem.caseScenarioId"  @drop="onDragToScenarioBeforeDone($event)" @dragover="onDragToScenarioBefore($event)" @dragenter="onDragToScenarioBeforeEnter($event)" @dragleave="onDragToScenarioBeforeLeave($event)">
       </div>
       <div class="TestScenario" :scenarioID="scenarioItem.caseScenarioId">
@@ -82,7 +82,7 @@ export default {
       this.currentDragId = caseScenarioId;
       // var imgOffsetX = $(this.currentDragElement).find('.sentenceText').outerWidth() + 36;
       var imgOffsetX = 30;
-      evt.dataTransfer.setDragImage(this.currentDragElement, imgOffsetX, 10);
+      evt.dataTransfer.setDragImage(this.currentDragElement, imgOffsetX, 30);
       return true;
     },
     onScenarioDragOver: function (evt) {
@@ -108,7 +108,8 @@ export default {
         return;
       }
       $(evt.target).addClass('TestScenarioBeforeTemp');
-      $(this.currentDragElement).addClass('TestScenarioCurrentTemp');
+      $(this.currentDragElement).addClass('dragItemDisapearAnimation');
+
       var testScenarioObj = this._getTestScenarioData(itemid);
       var theText = testScenarioObj == null ? testScenarioObj.scenarioName : '';
       $(evt.target).html('<span>' + theText + '</span>');
@@ -117,7 +118,7 @@ export default {
     onDragToScenarioBeforeLeave: function (evt) {
       evt.preventDefault();
       $(evt.target).removeClass('TestScenarioBeforeTemp');
-      $(this.currentDragElement).removeClass('TestScenarioCurrentTemp');
+      $(this.currentDragElement).removeClass('dragItemDisapearAnimation');
       $(evt.target).html('');
       return true;
     },
@@ -125,7 +126,7 @@ export default {
       evt.preventDefault();
       $(evt.target).html('');
       $(evt.target).removeClass('TestScenarioBeforeTemp');
-      $(this.currentDragElement).removeClass('TestScenarioCurrentTemp');
+      $(this.currentDragElement).removeClass('dragItemDisapearAnimation');
       var insertItemId = $(evt.target).attr('caseScenarioID');
       var dropEle = this.currentDragElement;
       if (dropEle == null) {

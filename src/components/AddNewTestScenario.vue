@@ -24,7 +24,7 @@
       <div class="column is-half">
         <div class="setenceList" style="width: 80%;">
           <div class="listItem" v-for="sentenceObj in sentenceList" v-bind:key="sentenceObj.id">
-            <a class="button is-success is-inverted" @click="editSentenceBase(sentenceObj.id)">
+            <a class="button is-link is-inverted" @click="editSentenceBase(sentenceObj.id)">
               <span class="icon is-small">
                 <span class="fas fa-edit"></span>
               </span>
@@ -100,6 +100,7 @@ export default {
     this.sentenceList = this.$root.convertTestSentenceToArray();
     var scenarioObj = this.$root.getTestScenarioByID(this.scenarioId);
     if (this.scenarioId == null || scenarioObj == null) {
+      this.isByPassValidate = true;
       this.$router.push('/');
     } else {
       this.testScenarioObj = scenarioObj;

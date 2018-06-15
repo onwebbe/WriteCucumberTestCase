@@ -41,6 +41,26 @@ $fa-font-path: '~font-awesome/fonts/';
   font-size: $size-3;
   font-weight: bold;
 }
+@keyframes dragItemDisapearAnimationKeyFrames
+{
+  from  { 
+          opacity: 1;
+        }
+  to {
+          opacity: 0.2;
+          background-color: $white-ter;
+          /* height: 0px;
+          margin-top: 0px;
+          margin-bottom: 0px;
+          padding-top: 0px;
+          padding-bottom: 0px;
+          display: none; */
+     }
+}
+.dragItemDisapearAnimation {
+  animation: dragItemDisapearAnimationKeyFrames 0.5s;
+  animation-fill-mode: both;
+}
 /*#app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
