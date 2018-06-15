@@ -3,27 +3,26 @@
     <div class="card">
       <header class="card-header">
         <p class="card-header-title">
-          Component
+          Test Case: {{testcase.id}}
         </p>
       </header>
       <div class="card-content hideContent">
         <div class="content">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris.
-          <a href="#">@bulmaio</a>. <a href="#">#css</a> <a href="#">#responsive</a>
-          <br>
-          <time datetime="2016-1-1">11:09 PM - 1 Jan 2016</time>
+          {{testcase.testCaseName}}
+          <br/>
+          Test scenario count: {{testcase.testScenarios == null? '' : testcase.testScenarios.length}}
         </div>
       </div>
       <footer class="card-footer">
-        <a href="#" class="card-footer-item" @click="showHideItem">
+        <a class="card-footer-item" @click="showHideItem">
           <span class="buttonIcon fas fa-eye" aria-hidden="true"></span>
           Show Detail
         </a>
-        <a href="#" class="card-footer-item">
+        <a class="card-footer-item" @click="editTestCase">
           <span class="buttonIcon fas fa-edit" aria-hidden="true"></span>
           Edit
         </a>
-        <a href="#" class="card-footer-item">
+        <a class="card-footer-item">
           <span class="buttonIcon fas fa-trash" aria-hidden="true"></span>
           Delete
         </a>
@@ -34,13 +33,22 @@
 
 <script>
 export default {
+  props: ['testcase'],
   data () {
     return {
-    }
+    };
   },
   methods: {
+    editTestCase: function () {
+      this.$router.push({
+        name: 'AddNewTestCase',
+        params: {
+          testcaseid: this.testcase.id,
+          isUpdate: true
+        }
+      });
+    },
     showHideItem: function () {
-      console.log();
       $(this.$el).find('.card-content').toggleClass('hideContent');
       if ($(this.$el).find('.card-content').hasClass('hideContent')) {
         $($(this.$el).find('.card-footer .buttonIcon')[0]).removeClass('fa-eye');
@@ -53,13 +61,13 @@ export default {
       }
     }
   }
-}
+};
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss" type="text/css">
-@import '~bulma';
-$fa-font-path: '~font-awesome/fonts/';
-@import '~font-awesome/scss/font-awesome';
+@import '../../node_modules/bulma';
+$fa-font-path: '../../node_modules/font-awesome/fonts/';
+@import '../../node_modules/font-awesome/scss/font-awesome';
 .card-header-title {
   font-size: 1rem;
 }

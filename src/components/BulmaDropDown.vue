@@ -28,7 +28,7 @@ export default {
       isDisplay: false,
       dropDownValueSelected: '',
       dropDownLabelSelected: '-- Please Select --'
-    }
+    };
   },
   mounted: function () {
     this.selectDropdownByValue();
@@ -60,12 +60,12 @@ export default {
       this.isDisplay = !this.isDisplay;
     }
   }
-}
+};
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss" type="text/css">
-@import '~bulma';
-$fa-font-path: '~font-awesome/fonts/';
-@import '~font-awesome/scss/font-awesome';
+@import '../../node_modules/bulma';
+$fa-font-path: '../../node_modules/font-awesome/fonts/';
+@import '../../node_modules/font-awesome/scss/font-awesome';
 
 </style>

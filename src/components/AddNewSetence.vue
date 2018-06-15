@@ -1,7 +1,7 @@
 <template>
   <div class="addNewTestSetenceMain container">
-    <div class="sentenceTitle">
-      {{title}}
+    <div class="pageTitle">
+      {{isUpdate?'Update':'Create'}} Test Sentence
     </div>
     <div class="sentenceCategory">
       <span style="line-height:32px;">Please select sentence category: </span><dropDownMenu :dropDownListItem="setenceCategoryList" @itemSelected="categoryDropdownSelected" :selectedValue="category" :class="{'is-danger' : categoryValidationError}"></dropDownMenu>
@@ -45,7 +45,7 @@
         <span class="icon is-small">
           <span class="fas fa-arrow-left"></span>
         </span>
-        <span>Cancel</span>
+        <span>Back</span>
       </a>
       &nbsp;&nbsp;&nbsp;
       <a class="button is-success is-outlined" @click="saveSentence">
@@ -59,7 +59,7 @@
 </template>
 
 <script>
-import DropDownMenu from '@/components/BulmaDropDown'
+import DropDownMenu from '@/components/BulmaDropDown';
 export default {
   props: ['sentenceId', 'scenarioId', 'scenarioSentenceId', 'isUpdate'],
   components: {
@@ -85,12 +85,13 @@ export default {
       ],
       title: '',
       nameValidationError: false,
-      categoryValidationError: false
-    }
+      categoryValidationError: false,
+      isByPassValidate: false
+    };
   },
   created: function () {
     this.loadData();
-    if (this.scenarioId != "-1") {
+    if (this.scenarioId != '-1') {
       this.title = 'Update Sentence';
     } else {
       this.title = 'Create new Sentence';
@@ -110,7 +111,7 @@ export default {
         this.parameters = sentenceObj.parameters || [];
       }
       // if update test sentence in test scenario, require merge the test scenario paramters
-      if (this.scenarioId != "-1") {
+      if (this.scenarioId != '-1') {
         var scenarioObj = this.$root.getTestScenarioByID(this.scenarioId);
         for (var i = 0; i < scenarioObj.testSentences.length; i++) {
           var testSentenceObj = scenarioObj.testSentences[i];
@@ -146,7 +147,7 @@ export default {
         parameterTextRep: parameterTextRep,
         parameterValue: '',
         status: 'normal'
-      }
+      };
       this.parameters.push(parameter);
       this.setenceValue += parameterText;
     },
@@ -182,7 +183,7 @@ export default {
         'category': this.category,
         'previewText': this.previewText,
         'parameters': this.parameters || []
-      }
+      };
       this.$root.data.testSentence[id] = sentenceObj;
       console.log('Save New Sentence Successfully');
     },
@@ -193,7 +194,7 @@ export default {
         existSentenceObj.category = this.category;
         existSentenceObj.previewText = this.previewText;
         // if update scenario sentence
-        if (this.scenarioId != "-1") {
+        if (this.scenarioId != '-1') {
           var testScenarioObj = this.$root.getTestScenarioByID(this.scenarioId);
           var testScenarioSentence = this._getTestSentenceById(testScenarioObj.testSentences, this.scenarioSentenceId);
           if (testScenarioSentence == null) {
@@ -224,27 +225,37 @@ export default {
       var scenarioParams = [];
       for (var i = 0; i < this.parameters.length; i++) {
         var param = this.parameters[i];
-        var paramValue = param.parameterValue;
-        var paramIndex = param.parameterIndex;
+        /* var paramValue = param.parameterValue; */
+        /* var paramIndex = param.parameterIndex; */
         scenarioParams.push(param);
       }
       return scenarioParams;
     },
     cancel: function () {
-      if (this.isUpdate)
-      this.$router.go(-1);
+      if (this.isUpdate) {
+        this.$router.go(-1);
+      } else {
+        this.isByPassValidate = true;
+        var existSentenceObj = this.$root.getTestSentenceByID(this.sentenceId);
+        this.$root.deleteTestSentence(existSentenceObj);
+        this.$router.go(-1);
+      }
     },
     mandatoryValidationCheck: function () {
-      var validationPass = true;
-      if (this.setenceValue == '' || this.setenceValue == null) {
-        this.nameValidationError = true;
-        validationPass = false;
+      if (this.isByPassValidate) {
+        return true;
+      } else {
+        var validationPass = true;
+        if (this.setenceValue == '' || this.setenceValue == null) {
+          this.nameValidationError = true;
+          validationPass = false;
+        }
+        if (this.category == '' || this.category == null) {
+          this.categoryValidationError = true;
+          validationPass = false;
+        }
+        return validationPass;
       }
-      if (this.category == '' || this.category == null) {
-        this.categoryValidationError = true;
-        validationPass = false;
-      }
-      return validationPass;
     },
     nameChanged: function () {
       if (this.setenceValue == '' || this.setenceValue == null) {
@@ -260,20 +271,22 @@ export default {
       this.renderPreview();
     }
   },
-  beforeRouteLeave (to, from , next) {
+  beforeRouteLeave (to, from, next) {
     if (this.mandatoryValidationCheck()) {
+      this.isByPassValidate = false;
       next();
     } else {
+      this.isByPassValidate = false;
       next(false);
     }
   }
-}
+};
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss" type="text/css">
-@import '~bulma';
-$fa-font-path: '~font-awesome/fonts/';
-@import '~font-awesome/scss/font-awesome';
+@import '../../node_modules/bulma';
+$fa-font-path: '../../node_modules/font-awesome/fonts/';
+@import '../../node_modules/font-awesome/scss/font-awesome';
 
 .buttonColumn {
   

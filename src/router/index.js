@@ -1,12 +1,12 @@
-import Vue from 'vue'
-import Router from 'vue-router'
+import Vue from 'vue';
+import Router from 'vue-router';
 /* import HelloWorld from '@/components/HelloWorld' */
-import CucumberMain from '@/components/CucumberMain'
-import AddNewCase from '@/components/AddNewTestCase'
-import AddNewTestScenario from '@/components/AddNewTestScenario'
-import AddNewSetence from '@/components/AddNewSetence'
+import CucumberMain from '@/components/CucumberMain';
+import AddNewCase from '@/components/AddNewTestCase';
+import AddNewTestScenario from '@/components/AddNewTestScenario';
+import AddNewSetence from '@/components/AddNewSetence';
 
-Vue.use(Router)
+Vue.use(Router);
 
 export default new Router({
   routes: [{

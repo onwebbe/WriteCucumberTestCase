@@ -38,8 +38,9 @@ export default {
   data () {
     return {
       currentDragId: null,
+      currentDragElement: null,
       currentSentenceList: []
-    }
+    };
   },
   watch: {
     sentenceList: function () {
@@ -84,7 +85,7 @@ export default {
       }
       return null;
     },
-     _getNextItem: function (currentItem) {
+    _getNextItem: function (currentItem) {
       var nextItemIndex = 0;
       for (var i = 0; i < this.currentSentenceList.length; i++) {
         if (currentItem == this.currentSentenceList[i]) {
@@ -144,6 +145,7 @@ export default {
         return false;
       }
       $(evt.target).addClass('TestSetenceBeforeTemp');
+      $(this.currentDragElement).addClass('TestSetenceCurrentTemp');
       var theText = this.getText(this._getItemData(itemid));
       $(evt.target).html('<span>' + theText + '</span>');
       return true;
@@ -151,6 +153,7 @@ export default {
     onDragToSetenceBeforeLeave: function (evt) {
       evt.preventDefault();
       $(evt.target).removeClass('TestSetenceBeforeTemp');
+      $(this.currentDragElement).removeClass('TestSetenceCurrentTemp');
       $(evt.target).html('');
       return true;
     },
@@ -158,6 +161,7 @@ export default {
       evt.preventDefault();
       $(evt.target).html('');
       $(evt.target).removeClass('TestSetenceBeforeTemp');
+      $(this.currentDragElement).removeClass('TestSetenceCurrentTemp');
       var insertItemId = $(evt.target).attr('sentenceID');
       var dropEle = this.currentDragElement;
       if (dropEle == null) {
@@ -167,6 +171,7 @@ export default {
       this._moveItem(itemid, insertItemId);
       evt.dataTransfer.setData('text', null);
       this.currentDragId = null;
+      this.currentDragElement = null;
       return false;
     },
     _moveItem: function (moveItemId, insertItemId) {
@@ -206,32 +211,33 @@ export default {
       if (item == null) {
         return '';
       }
-      let sentenceItemId = item.id;
+      /* let sentenceItemId = item.id; */
       let text = item.text;
       let parameters = item.parameters;
       return this.$root.renderSentencePreview(text, parameters).previewText;
     },
     editSentence: function (sentenceId, scenarioSentenceId) {
       this.$router.push({
-        name: 'AddNewSentence', params: {
-          sentenceId: id,
+        name: 'AddNewSentence',
+        params: {
+          sentenceId: sentenceId,
           scenarioId: this.scenarioId,
           scenarioSentenceId: scenarioSentenceId,
           isUpdate: true
         }
       });
     },
-    delSentence:function (sentenceId, scenarioSentenceId) {
-      this.$emit('sentenceDeleted', {sentenceId: sentenceId, scenarioSentenceId: scenarioSentenceId})
+    delSentence: function (sentenceId, scenarioSentenceId) {
+      this.$emit('sentenceDeleted', {sentenceId: sentenceId, scenarioSentenceId: scenarioSentenceId});
     }
   }
-}
+};
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss" type="text/css">
-@import '~bulma';
-$fa-font-path: '~font-awesome/fonts/';
-@import '~font-awesome/scss/font-awesome';
+@import '../../node_modules/bulma';
+$fa-font-path: '../../node_modules/font-awesome/fonts/';
+@import '../../node_modules/font-awesome/scss/font-awesome';
 
 .TestSetence {
   border: 1px solid $grey-lighter;
@@ -261,5 +267,7 @@ $fa-font-path: '~font-awesome/fonts/';
   width: 100%;
   padding-left: 48px;
 }
-
+.TestSetenceCurrentTemp {
+  display: none !important;
+}
 </style>

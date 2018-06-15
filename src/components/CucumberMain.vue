@@ -56,23 +56,8 @@
       </div>
       <div>
         <div class="columns cardContainer is-multiline">
-          <div class="column is-half">
-            <test-card></test-card>
-          </div>
-          <div class="column is-half">
-            <test-card></test-card>
-          </div>
-          <div class="column is-half">
-            <test-card></test-card>
-          </div>
-          <div class="column is-half">
-            <test-card></test-card>
-          </div>
-          <div class="column is-half">
-            <test-card></test-card>
-          </div>
-          <div class="column is-half">
-            <test-card></test-card>
+          <div class="column is-half" v-for="testCase in testCaseList" :key="testCase.id">
+            <test-card :testcase="testCase"></test-card>
           </div>
         </div>
       </div>
@@ -90,8 +75,12 @@ export default {
   },
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
-    }
+      msg: 'Welcome to Your Vue.js App',
+      testCaseList: []
+    };
+  },
+  created: function () {
+    this.testCaseList = this.$root.convertTestCaseToArray();
   },
   methods: {
     tabClicked: function (idx) {
@@ -105,23 +94,24 @@ export default {
         'testCaseName': '',
         'relatedBIs': [],
         'testScenarios': []
-      }
+      };
       this.$root.setTestCase(testCaseObj);
       this.$router.push({
-        name: 'AddNewTestCase', params: {
+        name: 'AddNewTestCase',
+        params: {
           testcaseid: id,
           isUpdate: false
         }
       });
     }
   }
-}
+};
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss" type="text/css">
-@import '~bulma';
-$fa-font-path: '~font-awesome/fonts/';
-@import '~font-awesome/scss/font-awesome';
+@import '../../node_modules/bulma';
+$fa-font-path: '../../node_modules/font-awesome/fonts/';
+@import '../../node_modules/font-awesome/scss/font-awesome';
 .summaryCard {
   height: 200px;
 }

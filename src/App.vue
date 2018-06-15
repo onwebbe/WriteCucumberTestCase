@@ -10,13 +10,13 @@
 </template>
 
 <script>
-import navBarHeader from '@/components/headerNavBar'
+import navBarHeader from '@/components/headerNavBar';
 export default {
   name: 'App',
   components: {
     'cucumber-navbar': navBarHeader
   }
-}
+};
 </script>
 
 <style lang="scss" type="text/css">
@@ -33,6 +33,13 @@ $fa-font-path: '~font-awesome/fonts/';
 }
 .dropdown.is-danger .dropdown-trigger button {
   border-color: $red;
+}
+.inputNameLabel {
+  font-size: $size-5;
+}
+.pageTitle {
+  font-size: $size-3;
+  font-weight: bold;
 }
 /*#app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;

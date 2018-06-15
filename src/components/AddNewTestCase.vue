@@ -1,7 +1,10 @@
 <template>
   <div class="addNewTestCaseMain container">
+    <div class="pageTitle">
+      {{isUpdate?'Update':'Create'}} Test Case
+    </div>
     <div>
-      <div>
+      <div class="inputNameLabel">
         Please input the test case name
       </div>
       <input class="input" :class="{'is-danger' : nameValidationError}" type="text" placeholder="Text input" v-model.lazy="testCaseObj.testCaseName">
@@ -44,14 +47,14 @@
       </div>
     </div>
     <div class="buttonColumn">
-      <a class="button is-link is-outlined">
+      <a class="button is-link is-outlined" @click="cancel">
         <span class="icon is-small">
           <span class="fas fa-arrow-left"></span>
         </span>
-        <span>Cancel</span>
+        <span>Back</span>
       </a>
       &nbsp;&nbsp;&nbsp;
-      <a class="button is-success is-outlined">
+      <a class="button is-success is-outlined" @click="done">
         <span class="icon is-small">
           <span class="fas fa-check"></span>
         </span>
@@ -62,7 +65,7 @@
 </template>
 
 <script>
-import ScenarioList from '@/components/TestScenarioInTestCase'
+import ScenarioList from '@/components/TestScenarioInTestCase';
 export default {
   props: ['testcaseid', 'isUpdate'],
   components: {
@@ -70,6 +73,7 @@ export default {
   },
   data () {
     return {
+      isByPassValidate: false,
       testScenarioList: [],
       testCaseObj: {
         'testCaseName': '',
@@ -77,12 +81,13 @@ export default {
         'testScenarios': []
       },
       nameValidationError: false
-      /*{
+
+      /* {
         id: '1',
         text: 'a',
         index: 1
-      }*/
-    }
+      } */
+    };
   },
   created: function () {
     this.testScenarioList = this.$root.convertTestScenarioToArray();
@@ -105,28 +110,28 @@ export default {
   },
   methods: {
     addNewScenario: function () {
-     var id = this.$root.generateNewTestScenarioID();
+      var id = this.$root.generateNewTestScenarioID();
       this.testScenarioObj = {
         'id': id,
         'scenarioName': '',
         'testSentences': []
-      }
+      };
       this.$root.data.testScenario[this.testScenarioObj.id] = this.testScenarioObj;
       this.$router.push({
-        name: 'AddNewTestScenario', params: {
+        name: 'AddNewTestScenario',
+        params: {
           scenarioId: id,
           isUpdate: false
         }
       });
     },
     addScenarioToList: function (scenarioId) {
-      var scenarioObj = this.$root.getTestScenarioByID(scenarioId);
       var caseScenarioId = this.testCaseObj.testScenarios.length + 1;
       caseScenarioId = caseScenarioId + '' + parseInt(Math.random() * 10000);
       var scenarioInCaseObj = {
         'testScenarioId': scenarioId,
         'caseScenarioId': caseScenarioId
-      }
+      };
       this.testCaseObj.testScenarios.push(scenarioInCaseObj);
       this.$root.setTestCase(this.testCaseObj);
     },
@@ -145,37 +150,56 @@ export default {
     },
     editScenario: function (scenarioId) {
       this.$router.push({
-        name: 'AddNewTestScenario', params: {
+        name: 'AddNewTestScenario',
+        params: {
           scenarioId: scenarioId,
           isUpdate: true
         }
       });
     },
     mandatoryValidationCheck: function () {
-      var validationPass = true;
-      if (this.testCaseObj.testCaseName == '' || this.testCaseObj.testCaseName == null) {
-        this.nameValidationError = true;
-        validationPass = false;
+      if (this.isByPassValidate) {
+        return true;
+      } else {
+        var validationPass = true;
+        if (this.testCaseObj.testCaseName == '' || this.testCaseObj.testCaseName == null) {
+          this.nameValidationError = true;
+          validationPass = false;
+        }
+        return validationPass;
       }
-      return validationPass;
+    },
+    cancel: function () {
+      if (this.isUpdate == false) {
+        this.$root.deleteTestCase(this.testCaseObj);
+      }
+      this.isByPassValidate = true;
+      this.$router.go(-1);
+    },
+    done: function () {
+      this.$root.setTestCase(this.testCaseObj);
+      this.$router.go(-1);
     }
   },
-  beforeRouteLeave (to, from , next) {
+  beforeRouteLeave (to, from, next) {
     if (this.mandatoryValidationCheck()) {
+      this.isByPassValidate = true;
       next();
     } else {
+      this.isByPassValidate = true;
       next(false);
     }
   }
-}
+};
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss" type="text/css">
-@import '~bulma';
-$fa-font-path: '~font-awesome/fonts/';
-@import '~font-awesome/scss/font-awesome';
+@import '../../node_modules/bulma';
+$fa-font-path: '../../node_modules/font-awesome/fonts/';
+@import '../../node_modules/font-awesome/scss/font-awesome';
 .addNewTestCaseMain .testCaseContent {
   padding-top: 20px;
+  margin-bottom: 0px;
 }
 .addNewTestCaseMain .testCaseContent .resultTestSentence {
 }

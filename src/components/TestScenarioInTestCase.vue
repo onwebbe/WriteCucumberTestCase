@@ -31,9 +31,10 @@ export default {
   },
   data () {
     return {
+      currentDragElement: null,
       currentDragId: null,
       currentScenarioList: []
-    }
+    };
   },
   watch: {
     scenarioList: function () {
@@ -107,6 +108,7 @@ export default {
         return;
       }
       $(evt.target).addClass('TestScenarioBeforeTemp');
+      $(this.currentDragElement).addClass('TestScenarioCurrentTemp');
       var testScenarioObj = this._getTestScenarioData(itemid);
       var theText = testScenarioObj == null ? testScenarioObj.scenarioName : '';
       $(evt.target).html('<span>' + theText + '</span>');
@@ -115,6 +117,7 @@ export default {
     onDragToScenarioBeforeLeave: function (evt) {
       evt.preventDefault();
       $(evt.target).removeClass('TestScenarioBeforeTemp');
+      $(this.currentDragElement).removeClass('TestScenarioCurrentTemp');
       $(evt.target).html('');
       return true;
     },
@@ -122,6 +125,7 @@ export default {
       evt.preventDefault();
       $(evt.target).html('');
       $(evt.target).removeClass('TestScenarioBeforeTemp');
+      $(this.currentDragElement).removeClass('TestScenarioCurrentTemp');
       var insertItemId = $(evt.target).attr('caseScenarioID');
       var dropEle = this.currentDragElement;
       if (dropEle == null) {
@@ -131,6 +135,7 @@ export default {
       this._moveItem(itemid, insertItemId);
       evt.dataTransfer.setData('text', null);
       this.currentDragId = null;
+      this.currentDragElement = null;
       return false;
     },
     _moveItem: function (moveItemId, insertItemId) {
@@ -178,23 +183,24 @@ export default {
     },
     editSentence: function (scenarioId) {
       this.$router.push({
-        name: 'AddNewTestScenario', params: {
+        name: 'AddNewTestScenario',
+        params: {
           scenarioId: scenarioId,
           isUpdte: true
         }
       });
     },
-    delScenario:function (scenarioId, caseScenarioId) {
-      this.$emit('scenariodeleted', {scenarioId: scenarioId, caseScenarioId: caseScenarioId})
+    delScenario: function (scenarioId, caseScenarioId) {
+      this.$emit('scenariodeleted', {scenarioId: scenarioId, caseScenarioId: caseScenarioId});
     }
   }
-}
+};
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss" type="text/css">
-@import '~bulma';
-$fa-font-path: '~font-awesome/fonts/';
-@import '~font-awesome/scss/font-awesome';
+@import '../../node_modules/bulma';
+$fa-font-path: '../../node_modules/font-awesome/fonts/';
+@import '../../node_modules/font-awesome/scss/font-awesome';
 
 .TestScenario {
   border: 1px solid $grey-lighter;
@@ -224,5 +230,7 @@ $fa-font-path: '~font-awesome/fonts/';
   width: 100%;
   padding-left: 48px;
 }
-
+.TestScenarioCurrentTemp {
+  display: none;
+}
 </style>

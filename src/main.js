@@ -1,9 +1,9 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
-import Vue from 'vue'
-import App from './App'
-import router from './router'
-Vue.config.productionTip = false
+import Vue from 'vue';
+import App from './App';
+import router from './router';
+Vue.config.productionTip = false;
 /* @import url('../static/animate.css'); */
 /* eslint-disable no-new */
 /* require('./assets/style/bulma/css/bulma.css')
@@ -18,16 +18,12 @@ new Vue({
   },
   template: '<App/>',
   data: {
-    'test': 'ttt',
     'data': {
       'testSentence': {
       },
       'testScenario': {
       },
       'testCase': {
-        'testScenario': [{
-          'scenarioId': ''
-        }]
       }
     }
   },
@@ -53,7 +49,7 @@ new Vue({
       if (window.localStorage) {
         var stringData = window.localStorage.getItem('allData');
         var objData = null;
-        if (stringData != null) {
+        if (stringData != null && stringData != '') {
           objData = JSON.parse(stringData);
         }
         if (objData != null) {
@@ -103,7 +99,11 @@ new Vue({
     },
 
     convertTestCaseToArray: function () {
-      console.log('convertTestCaseToArray');
+      var testCaseArray = [];
+      for (var testCaseId in this.data.testCase) {
+        testCaseArray.push(this.data.testCase[testCaseId]);
+      }
+      return testCaseArray;
     },
     getTestCaseByID: function (testCaseId) {
       return this.data.testCase[testCaseId];
@@ -112,6 +112,10 @@ new Vue({
       var testCaseId = testCaseObj.id;
       this.data.testCase[testCaseId] = testCaseObj;
       this.saveData();
+    },
+    deleteTestCase: function (testCaseObj) {
+      var testCaseId = testCaseObj.id;
+      delete this.data.testCase[testCaseId];
     },
 
     generateNewTestCaseID: function () {
@@ -159,7 +163,7 @@ new Vue({
         'id': testScenarioId,
         'scenarioName': name,
         'testSentence': sentences || []
-      }
+      };
       this.data.testScenario[testScenarioId] = testScenario;
       return testScenario;
     },
@@ -169,7 +173,7 @@ new Vue({
         'id': testSentenceId,
         'text': text,
         'paramters': paramters || []
-      }
+      };
       this.data.testSentence[testSentenceId] = testSentence;
       return testSentence;
     },
@@ -195,7 +199,7 @@ new Vue({
       return {
         'previewHtml': previewHtml,
         'previewText': previewText
-      }
+      };
     }
   }
 });
