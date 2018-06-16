@@ -77,12 +77,7 @@ export default {
       setenceValue: '',
       previewHtml: '<span style="color:grey">Preview Here</span>',
       previewText: '',
-      setenceCategoryList: [
-        {value: 'admincases', label: 'Admin Cases'},
-        {value: 'mentorcases', label: 'Mentor Cases'},
-        {value: 'menteecases', label: 'Mentee Cases'},
-        {value: 'managercases', label: 'Manager Cases'}
-      ],
+      setenceCategoryList: [],
       title: '',
       nameValidationError: false,
       categoryValidationError: false,
@@ -96,6 +91,7 @@ export default {
     } else {
       this.title = 'Create new Sentence';
     }
+    this.setenceCategoryList = this.$root.getSentenceCategoryList();
   },
   mounted: function () {
   },

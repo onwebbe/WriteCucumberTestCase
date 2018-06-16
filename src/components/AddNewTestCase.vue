@@ -210,7 +210,7 @@ $fa-font-path: '../../node_modules/font-awesome/fonts/';
   border-left: 1px solid $grey-light;
 }
 .setenceList .listItem {
-  height: 60px;
+  min-height: 60px;
   border-bottom: 1px solid $grey-light;
   display: flex;
   align-items: center;
@@ -219,7 +219,8 @@ $fa-font-path: '../../node_modules/font-awesome/fonts/';
 .setenceList .listItem .listDataTitle {
   margin-top: 0px;
   margin-bottom: 0px;
-  padding-left: 20px;
+  padding-left: 5px;
+  width: calc(100% - 125px);
 }
 /*.setenceList .listItem:hover {
   background-color: $white-ter;

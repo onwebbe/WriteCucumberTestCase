@@ -12,7 +12,7 @@
     <div class="columns testSentenceContent">
       <div class="column">
         Category: <dropDownMenu :dropDownListItem="setenceCategoryList" @itemSelected="categoryDropdownSelected"></dropDownMenu>
-        <a class="button is-success is-outlined" style="display:inline-block;float: right;" @click="addNewSentence">
+        <a class="button is-success is-outlined" style="display:inline-block;margin-left: 20px;" @click="addNewSentence">
           <span class="icon">
             <span class="fas fa-plus-circle"></span>
           </span>
@@ -76,12 +76,7 @@ export default {
   },
   data () {
     return {
-      setenceCategoryList: [
-        {value: 'admincases', label: 'Admin Cases'},
-        {value: 'mentorcases', label: 'Mentor Cases'},
-        {value: 'menteecases', label: 'Mentee Cases'},
-        {value: 'managercases', label: 'Manager Cases'}
-      ],
+      setenceCategoryList: [],
       sentenceList: [],
       testScenarioObj: {
         testScenarioName: '',
@@ -105,6 +100,9 @@ export default {
     } else {
       this.testScenarioObj = scenarioObj;
     }
+    this.setenceCategoryList = this.$root.getSentenceCategoryList();
+    var defaultCategory = {'value': '', 'label': 'All Cases'};
+    this.setenceCategoryList.splice(0, 0, defaultCategory);
     this.$watch('testScenarioObj.testScenarioName', function (newVal) {
       if (newVal == null || newVal == '') {
         this.nameValidationError = true;
@@ -142,6 +140,10 @@ export default {
     categoryDropdownSelected: function (value) {
       this.sentenceList = [];
       var allTestSentences = this.$root.convertTestSentenceToArray();
+      if (value == null || value == '') {
+        this.sentenceList = allTestSentences;
+        return;
+      }
       for (var i = 0; i < allTestSentences.length; i++) {
         var testSentence = allTestSentences[i];
         if (testSentence.category === value) {
@@ -251,7 +253,7 @@ $fa-font-path: '../../node_modules/font-awesome/fonts/';
   border-left: 1px solid $grey-light;
 }
 .setenceList .listItem {
-  height: 60px;
+  min-height: 60px;
   border-bottom: 1px solid $grey-light;
   display: flex;
   align-items: center;
@@ -260,7 +262,8 @@ $fa-font-path: '../../node_modules/font-awesome/fonts/';
 .setenceList .listItem .listDataTitle {
   margin-top: 0px;
   margin-bottom: 0px;
-  padding-left: 20px;
+  padding-left: 5px;
+  width: calc(100% - 125px);
   display: inline-block;
 }
 /*.setenceList .listItem:hover {

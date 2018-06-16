@@ -18,6 +18,13 @@ new Vue({
   },
   template: '<App/>',
   data: {
+    'setenceCategoryList': [
+      {'value': 'admincases', 'label': 'Admin Cases'},
+      {'value': 'mentorcases', 'label': 'Mentor Cases'},
+      {'value': 'menteecases', 'label': 'Mentee Cases'},
+      {'value': 'managercases', 'label': 'Manager Cases'},
+      {'value': 'emailcase', 'label': 'Email Cases'}
+    ],
     'data': {
       'testSentence': {
       },
@@ -60,7 +67,6 @@ new Vue({
     convertTestSentenceToArray: function () {
       var sentenceList = [];
       for (var sentenceId in this.data.testSentence) {
-        console.log(sentenceId);
         sentenceList.push(this.data.testSentence[sentenceId]);
       }
       return sentenceList;
@@ -200,6 +206,9 @@ new Vue({
         'previewHtml': previewHtml,
         'previewText': previewText
       };
+    },
+    getSentenceCategoryList: function () {
+      return JSON.parse(JSON.stringify(this.setenceCategoryList));
     }
   }
 });
