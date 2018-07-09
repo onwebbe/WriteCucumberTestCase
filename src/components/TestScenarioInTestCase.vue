@@ -1,6 +1,6 @@
 <template>
   <div class="TestSetenceInScenarioMain">
-    <div v-for="scenarioItem in currentScenarioList" v-bind:key="scenarioItem.caseScenarioId" class="TestScenarioItem">
+    <div v-for="(scenarioItem, key) in currentScenarioList" v-bind:key="scenarioItem.caseScenarioId" class="TestScenarioItem">
       <div class="TestScenarioBefore" :caseScenarioID="scenarioItem.caseScenarioId"  @drop="onDragToScenarioBeforeDone($event)" @dragover="onDragToScenarioBefore($event)" @dragenter="onDragToScenarioBeforeEnter($event)" @dragleave="onDragToScenarioBeforeLeave($event)">
       </div>
       <div class="TestScenario" :scenarioID="scenarioItem.caseScenarioId">
@@ -10,7 +10,7 @@
           </span>
         </a>
         <div class="scenarioText">
-          {{ scenarioItem.testScenarioName }}
+          {{key + 1}}. {{ scenarioItem.testScenarioName }}
         </div>
         <div class="scenarioAction">
           <a class="button is-danger" @click="delScenario(scenarioItem.testScenarioId, scenarioItem.caseScenarioId)">

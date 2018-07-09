@@ -18,7 +18,11 @@
     </div>
     <div class="columns">
       <div class="column">
-        <input class="input" :class="{'is-danger' : nameValidationError}" type="text" placeholder="Setence here" v-model="setenceValue" @change="nameChanged">
+        <span>
+          <dropDownMenu :dropDownListItem="sentenceTypeList" @itemSelected="typeDropdownSelected" :selectedValue="type" :class="{'is-danger' : typeValidationError}"></dropDownMenu>
+        </span>
+        <input class="input sentenceTextInput" :class="{'is-danger' : nameValidationError}" type="text" placeholder="Setence here" v-model="setenceValue" @change="nameChanged">
+        <span class="validationError" v-show="nameValidationError"><br/>{{nameValidationErrorMsg}}</span>
       </div>
       <div class="column is-one-quarter">
         <a class="button is-success is-outlined" style="display:inline-block;" @click="addParamter">
@@ -68,6 +72,7 @@ export default {
   data () {
     return {
       category: '',
+      type: 'GIVEN',
       parameters: [],
       paramterStart: '[^$-',
       paramterStartRep: '\\[\\^\\$-',
@@ -78,9 +83,12 @@ export default {
       previewHtml: '<span style="color:grey">Preview Here</span>',
       previewText: '',
       setenceCategoryList: [],
+      sentenceTypeList: [],
       title: '',
       nameValidationError: false,
+      nameValidationErrorMsg: '',
       categoryValidationError: false,
+      typeValidationError: false,
       isByPassValidate: false
     };
   },
@@ -92,6 +100,7 @@ export default {
       this.title = 'Create new Sentence';
     }
     this.setenceCategoryList = this.$root.getSentenceCategoryList();
+    this.sentenceTypeList = this.$root.getSetenceTypeList();
   },
   mounted: function () {
   },
@@ -189,6 +198,7 @@ export default {
         existSentenceObj.text = this.setenceValue;
         existSentenceObj.category = this.category;
         existSentenceObj.previewText = this.previewText;
+        existSentenceObj.type = this.type;
         // if update scenario sentence
         if (this.scenarioId != '-1') {
           var testScenarioObj = this.$root.getTestScenarioByID(this.scenarioId);
@@ -244,6 +254,12 @@ export default {
         var validationPass = true;
         if (this.setenceValue == '' || this.setenceValue == null) {
           this.nameValidationError = true;
+          this.nameValidationErrorMsg = '* required field';
+          validationPass = false;
+        }
+        if (this.$root.checkIfDuplicatedTestSentence(this.sentenceId, this.setenceValue)) {
+          this.nameValidationError = true;
+          this.nameValidationErrorMsg = 'Text already exists.';
           validationPass = false;
         }
         if (this.category == '' || this.category == null) {
@@ -256,20 +272,34 @@ export default {
     nameChanged: function () {
       if (this.setenceValue == '' || this.setenceValue == null) {
         this.nameValidationError = true;
+        this.nameValidationErrorMsg = '* required field';
       } else {
         this.nameValidationError = false;
+        this.nameValidationErrorMsg = '';
         this.updateSentence();
       }
+    },
+    typeDropdownSelected: function (value) {
+      this.type = value;
+      console.log(value);
     }
   },
   watch: {
-    setenceValue: function () {
+    setenceValue: function (value) {
+      this.nameValidationError = false;
+      this.nameValidationErrorMsg = '';
+      if (this.$root.checkIfDuplicatedTestSentence(this.sentenceId, value)) {
+        this.nameValidationError = true;
+        this.nameValidationErrorMsg = 'Text already exists.';
+        return false;
+      }
       this.renderPreview();
     }
   },
   beforeRouteLeave (to, from, next) {
     if (this.mandatoryValidationCheck()) {
       this.isByPassValidate = false;
+      this.nameValidationErrorMsg = '';
       next();
     } else {
       this.isByPassValidate = false;
@@ -298,6 +328,9 @@ $fa-font-path: '../../node_modules/font-awesome/fonts/';
 .sentenceTitle {
   font-size: 2rem;
   margin: 10px 0;
+}
+.sentenceTextInput {
+  width: calc(100% - 100px);
 }
 /*.setencePreview > div:nth-child(1) {
   border-bottom: 1px solid $grey-lighter;

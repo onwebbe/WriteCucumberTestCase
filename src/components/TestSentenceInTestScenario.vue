@@ -1,6 +1,6 @@
 <template>
   <div class="TestSetenceInScenarioMain">
-    <div v-for="sentenceItem in currentSentenceList" v-bind:key="sentenceItem.id +  sentenceItem.scenarioSentenceId">
+    <div v-for="(sentenceItem, key) in currentSentenceList" v-bind:key="sentenceItem.id +  sentenceItem.scenarioSentenceId">
       <div class="TestSetenceBefore" :sentenceID="sentenceItem.id + sentenceItem.scenarioSentenceId"  @drop="onDragToSetenceBeforeDone($event)" @dragover="onDragToSetenceBefore($event)" @dragenter="onDragToSetenceBeforeEnter($event)" @dragleave="onDragToSetenceBeforeLeave($event)">
       </div>
       <div class="TestSetence" :sentenceID="sentenceItem.id">
@@ -10,7 +10,7 @@
           </span>
         </a>
         <div class="sentenceText">
-          {{ getText(sentenceItem) }}
+          {{key + 1}}. <span class="sentenceType">{{getType(sentenceItem, key)}}</span> {{ getText(sentenceItem) }}
         </div>
         <div class="sentenceAction">
           <a class="button is-link is-inverted" @click="editSentence(sentenceItem.id, sentenceItem.scenarioSentenceId)">
@@ -211,13 +211,10 @@ export default {
       return null;
     },
     getText: function (item) {
-      if (item == null) {
-        return '';
-      }
-      /* let sentenceItemId = item.id; */
-      let text = item.text;
-      let parameters = item.parameters;
-      return this.$root.renderSentencePreview(text, parameters).previewText;
+      return this.$root.getSentenceText(item);
+    },
+    getType: function (item, idx) {
+      return this.$root.getSentenceType(this.currentSentenceList, idx);
     },
     editSentence: function (sentenceId, scenarioSentenceId) {
       this.$router.push({

@@ -5,6 +5,7 @@ import CucumberMain from '@/components/CucumberMain';
 import AddNewCase from '@/components/AddNewTestCase';
 import AddNewTestScenario from '@/components/AddNewTestScenario';
 import AddNewSetence from '@/components/AddNewSetence';
+import ViewTestCase from '@/components/ViewTestCase';
 
 Vue.use(Router);
 
@@ -27,6 +28,11 @@ export default new Router({
     path: '/addNewTestSetence/:sentenceId/scenarioId/:scenarioId/:scenarioSentenceId/:isUpdate',
     name: 'AddNewSentence',
     component: AddNewSetence,
+    props: true
+  }, {
+    path: '/ViewTestCase/:testcaseid',
+    name: 'ViewTestCase',
+    component: ViewTestCase,
     props: true
   }]
   /* ,

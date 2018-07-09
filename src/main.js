@@ -25,6 +25,11 @@ new Vue({
       {'value': 'managercases', 'label': 'Manager Cases'},
       {'value': 'emailcase', 'label': 'Email Cases'}
     ],
+    'sentenceTypeList': [
+      {'value': 'GIVEN', 'label': 'GIVEN'},
+      {'value': 'WHEN', 'label': 'WHEN'},
+      {'value': 'THEN', 'label': 'THEN'}
+    ],
     'data': {
       'testSentence': {
       },
@@ -83,6 +88,18 @@ new Vue({
       var sentenceId = sentenceObj.id;
       delete this.data.testSentence[sentenceId];
     },
+    checkIfDuplicatedTestSentence: function (id, name) {
+      for (var sentenceID in this.data.testSentence) {
+        var sentenceItem = this.data.testSentence[sentenceID];
+        var sentenceText = sentenceItem.text;
+        var sentenceId = sentenceItem.id;
+        if ((sentenceText.trim().toUpperCase() == name.trim().toUpperCase()) &&
+             sentenceId != id) {
+          return true;
+        }
+      }
+      return false;
+    },
 
     convertTestScenarioToArray: function () {
       var testScenarioList = [];
@@ -102,6 +119,16 @@ new Vue({
     deleteTestScenario: function (testScenarioObj) {
       var testScenarioId = testScenarioObj.id;
       delete this.data.testScenario[testScenarioId];
+    },
+    checkIfDuplicatedTestScensrio: function (name) {
+      for (var scenarioID in this.data.testScenario) {
+        var scenarioItem = this.data.testScenario[scenarioID];
+        var scenarioName = scenarioItem.scenarioName;
+        if (scenarioName.trim().toUpperCase() == name.trim().toUpperCase()) {
+          return true;
+        }
+      }
+      return false;
     },
 
     convertTestCaseToArray: function () {
@@ -207,8 +234,34 @@ new Vue({
         'previewText': previewText
       };
     },
+    getSentenceText: function (item) {
+      if (item == null) {
+        return '';
+      }
+      /* let sentenceItemId = item.id; */
+      let text = item.text;
+      let parameters = item.parameters;
+      return this.renderSentencePreview(text, parameters).previewText;
+    },
+    getSentenceType: function (sentenceList, idx) {
+      var item = sentenceList[idx];
+      if (idx == 0) {
+        return item.type || 'GIVEN';
+      } else {
+        var thisItemType = item.type || 'GIVEN';
+        var prevItemType = sentenceList[idx - 1].type || 'GIVEN';
+        if (thisItemType == prevItemType) {
+          return 'AND';
+        } else {
+          return thisItemType || 'GIVEN';
+        }
+      }
+    },
     getSentenceCategoryList: function () {
       return JSON.parse(JSON.stringify(this.setenceCategoryList));
+    },
+    getSetenceTypeList: function () {
+      return JSON.parse(JSON.stringify(this.sentenceTypeList));
     }
   }
 });

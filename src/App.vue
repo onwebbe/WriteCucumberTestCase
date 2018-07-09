@@ -41,6 +41,10 @@ $fa-font-path: '~font-awesome/fonts/';
   font-size: $size-3;
   font-weight: bold;
 }
+.validationError {
+  color: $danger;
+  font-size: 0.8rem;
+}
 @keyframes dragItemDisapearAnimationKeyFrames
 {
   from  { 
@@ -60,6 +64,9 @@ $fa-font-path: '~font-awesome/fonts/';
 .dragItemDisapearAnimation {
   animation: dragItemDisapearAnimationKeyFrames 0.5s;
   animation-fill-mode: both;
+}
+.sentenceType {
+  color: $turquoise;
 }
 /*#app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;

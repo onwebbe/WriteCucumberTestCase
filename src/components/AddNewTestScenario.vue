@@ -9,15 +9,21 @@
       </div>
       <input class="input" :class="{'is-danger' : nameValidationError}" type="text" placeholder="Text input" v-model.lazy="testScenarioObj.testScenarioName">
     </div>
+    <div>
+      <a class="button is-success is-outlined" style="display:inline-block;margin-top: 20px;" @click="addNewSentence">
+        <span class="icon">
+          <span class="fas fa-plus-circle"></span>
+        </span>
+        <span>Add New Sentence</span>
+      </a>
+    </div>
     <div class="columns testSentenceContent">
+      <div class="column" style="line-height: 36px;">
+        Category: <dropDownMenu :dropDownListItem="setenceCategoryList" @itemSelected="categoryDropdownSelected"></dropDownMenu>&nbsp;&nbsp;
+        Search: <input class="input" type="search" placeholder="Search" v-model="searchSentence" style="display:inline-block;width:auto;">
+      </div>
       <div class="column">
-        Category: <dropDownMenu :dropDownListItem="setenceCategoryList" @itemSelected="categoryDropdownSelected"></dropDownMenu>
-        <a class="button is-success is-outlined" style="display:inline-block;margin-left: 20px;" @click="addNewSentence">
-          <span class="icon">
-            <span class="fas fa-plus-circle"></span>
-          </span>
-          <span>Add New Sentence</span>
-        </a>
+        
       </div>
     </div>
     <div class="columns">
@@ -83,7 +89,9 @@ export default {
         testSentences: []
       },
       nameValidationError: false,
-      isByPassValidate: false
+      isByPassValidate: false,
+      searchSentence: '',
+      dropdownSelectedValue: ''
       /* {
         id: '1',
         text: 'a',
@@ -115,6 +123,25 @@ export default {
   mounted: function () {
   },
   watch: {
+    searchSentence: function (value) {
+      if (value == null || value == '') {
+        return;
+      }
+      var searchResult = [];
+      var tmpSentenceList = JSON.parse(JSON.stringify(this.$root.convertTestSentenceToArray()));
+      for (var i = 0; i < tmpSentenceList.length; i++) {
+        let sentenceItem = tmpSentenceList[i];
+        let text = sentenceItem.text.toLowerCase();
+        let searchValue = value.toLowerCase();
+        if (text.indexOf(searchValue) >= 0) {
+          if ((this.dropdownSelectedValue == null || this.dropdownSelectedValue == '') ||
+                (sentenceItem.category === this.dropdownSelectedValue)) {
+            searchResult.push(sentenceItem);
+          }
+        }
+      }
+      this.sentenceList = searchResult;
+    }
   },
   methods: {
     addNewSentence: function () {
@@ -124,6 +151,7 @@ export default {
         'text': '',
         'category': '',
         'previewText': '',
+        'type': '', // GIVEN - WHEN - THEN
         'parameters': []
       };
       this.$root.data.testSentence[id] = sentenceObj;
@@ -138,6 +166,7 @@ export default {
       });
     },
     categoryDropdownSelected: function (value) {
+      this.dropdownSelectedValue = value;
       this.sentenceList = [];
       var allTestSentences = this.$root.convertTestSentenceToArray();
       if (value == null || value == '') {
@@ -150,6 +179,7 @@ export default {
           this.sentenceList.push(testSentence);
         }
       }
+      this.searchSentence = '';
     },
     sentenceDeleted: function (params) {
       var sentenceId = params.sentenceId;

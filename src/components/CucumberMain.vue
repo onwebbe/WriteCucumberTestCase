@@ -57,32 +57,61 @@
       <div>
         <div class="columns cardContainer is-multiline">
           <div class="column is-half" v-for="testCase in testCaseList" :key="testCase.id">
-            <test-card :testcase="testCase"></test-card>
+            <test-card @viewTestCase="viewTestCase" :testcase="testCase"></test-card>
           </div>
         </div>
       </div>
     </div>
     <div class="">
     </div>
+    <div class="viewDetailPopup modal" :class="{'is-active': viewDetailPopup}">
+      <div class="modal-background"></div>
+      <div class="modal-content" style="background-color: white;max-height: 80%;height: 80%;">
+        <div class="dialogHeader" style="height: 40px;line-height: 40px;border-bottom: 1px solid black;text-align: center;font-size:1.5rem; font-weight: bold;">
+          View Test Case
+          <span style="float:right;margin-right: 10px;">
+            <button @click="hideViewDetail" class="modal-close is-danger is-large" aria-label="close" style="position:relative;top:5px;right:0px;"></button>
+          </span>
+        </div>
+        <div class="dialogContent" style="overflow-y: auto;height: calc( 100% - 45px );padding: 20px;">
+          <view-panel :testcaseid='viewDetailTestcaseID'></view-panel>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import Card from './TestCard';
+import ViewTestCase from './ViewTestCase';
 export default {
   components: {
-    'test-card': Card
+    'test-card': Card,
+    'view-panel': ViewTestCase
   },
   data () {
     return {
       msg: 'Welcome to Your Vue.js App',
-      testCaseList: []
+      testCaseList: [],
+      viewDetailPopup: false,
+      viewDetailTestcaseID: ''
     };
   },
   created: function () {
     this.testCaseList = this.$root.convertTestCaseToArray();
   },
   methods: {
+    viewTestCase: function (params) {
+      this.viewDetailTestcaseID = params.testcase.id;
+      this.viewDetailPopup = true;
+      var that = this;
+      setTimeout(function () {
+        that.viewDetailTestcaseID = '';
+      }, 200);
+    },
+    hideViewDetail: function () {
+      this.viewDetailPopup = false;
+    },
     tabClicked: function (idx) {
       $('.tabs.TestSummaryContentTabs li').removeClass('is-active');
       $($('.tabs.TestSummaryContentTabs li')[idx - 1]).addClass('is-active');
@@ -142,5 +171,15 @@ $fa-font-path: '../../node_modules/font-awesome/fonts/';
 }
 .TestSummaryContentTabs {
   margin-bottom: 1.2rem;
+}
+.viewDetailPopup .dialogHeader .delete:before, 
+.viewDetailPopup .dialogHeader .modal-close:before, 
+.viewDetailPopup .dialogHeader .delete:after, 
+.viewDetailPopup .dialogHeader .modal-close:after {
+  background-color: red;
+}
+.viewDetailPopup .dialogHeader .modal-close:focus,
+.viewDetailPopup .dialogHeader .modal-close:hover {
+  background: none;
 }
 </style>

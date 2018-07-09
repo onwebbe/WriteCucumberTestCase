@@ -12,6 +12,7 @@
           <br/>
           Test scenario count: {{testcase.testScenarios == null? '' : testcase.testScenarios.length}}
         </div>
+        <a @click="viewTestCase">View</a>
       </div>
       <footer class="card-footer">
         <a class="card-footer-item" @click="showHideItem">
@@ -59,6 +60,15 @@ export default {
         $($(this.$el).find('.card-footer .buttonIcon')[0]).removeClass('fa-eye-slash');
         $($(this.$el).find('.card-footer .buttonIcon')[0]).addClass('fa-eye-slash');
       }
+    },
+    viewTestCase: function () {
+      this.$emit('viewTestCase', {testcase: this.testcase});
+      /* this.$router.push({
+        name: 'ViewTestCase',
+        params: {
+          testcaseid: this.testcase.id
+        }
+      }); */
     }
   }
 };
